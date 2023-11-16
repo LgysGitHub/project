@@ -1,0 +1,53 @@
+{
+  "name": "api-server",
+  "version": "1.0.0",
+  "description": "API server",
+  "main": "build/index.js",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "npx eslint ."
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/connect-redis": "0.0.18",
+    "@types/express": "4.17.9",
+    "@types/express-promise-router": "3.0.0",
+    "@types/ioredis": "^4.26.6",
+    "@types/morgan": "^1.9.3",
+    "@types/node": "^16.4.0",
+    "@types/node-fetch": "^2.6.2",
+    "@types/ali-oss": "^6.16.4",
+    "@typescript-eslint/eslint-plugin": "4.12.0",
+    "eslint": "^7.18.0",
+    "eslint-config-standard-with-typescript": "19.0.1",
+    "eslint-plugin-import": "2.22.1",
+    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-promise": "4.2.1",
+    "eslint-plugin-standard": "4.1.0",
+    "ts-node": "9.1.1",
+    "typescript": "4.1.2"
+  },
+  "dependencies": {
+    "@alicloud/pop-core": "^1.7.12",
+    "@elastic/elasticsearch": "~8.2.0",
+    "ajv": "^8.11.0",
+    "ali-oss": "^6.17.1",
+    "bcrypt": "^5.0.1",
+    "connect-redis": "^6.1.3",
+    "dotenv": "8.2.0",
+    "express": "4.17.1",
+    "express-promise-router": "4.0.1",
+    "express-session": "^1.17.3",
+    "ioredis": "^4.27.7",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.40",
+    "morgan": "^1.10.0",
+    "node-fetch": "^2.6.7",
+    "tls-sig-api-v2-typescript": "^1.0.4",
+    "wechatpay-node-v3": "^2.0.0",
+    "winston": "^3.7.2"
+  }
+}

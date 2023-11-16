@@ -1,0 +1,46 @@
+{
+  "dynamic": false,
+  "properties": {
+    "createdDate": {
+      "type": "date"
+    },
+    "name": {
+      "type": "text"
+    },
+    "idcardNumber": {
+      "type": "keyword"
+    },
+    "realNameCertified": {
+      "type": "boolean"
+    },
+    "phoneNumber": {
+      "type": "keyword"
+    },
+    "wxUnionId": {
+      "type": "keyword"
+    },
+    "wxName": {
+      "type": "keyword",
+      "index": false
+    },
+    "passwordHash": {
+      "type": "keyword",
+      "index": false
+    },
+    "role": {
+      "type": "keyword"
+    },
+    "roleId": {
+      "type": "keyword"
+    },
+    "cityName": {
+      "type": "keyword"
+    },
+    "cityAdcode": {
+      "type": "keyword"
+    },
+    "balance": {
+      "type": "integer"
+    }
+  }
+}

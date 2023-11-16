@@ -1,0 +1,364 @@
+version: "3.8"
+
+services:
+  es-setup:
+    container_name: es-setup
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.2.1
+    volumes:
+      - certs:/usr/share/elasticsearch/config/certs
+      - ./elastic_ca.crt:/mnt/elastic_ca.crt
+      - ./elastic_ca.key:/mnt/elastic_ca.key
+    user: "0"
+    command: >
+      bash -c '
+        echo "Copy CA from host machine";
+        mkdir -p config/certs/ca
+        cp -f /mnt/elastic_ca.crt config/certs/ca/ca.crt
+        cp -f /mnt/elastic_ca.key config/certs/ca/ca.key
+
+        if [ ! -f config/certs/certs.zip ]; then
+          echo "Creating certs";
+          echo -ne \
+          "instances:\n"\
+          "  - name: es01\n"\
+          "    dns:\n"\
+          "      - es01\n"\
+          "      - localhost\n"\
+          "    ip:\n"\
+          "      - 127.0.0.1\n"\
+          "  - name: es02\n"\
+          "    dns:\n"\
+          "      - es02\n"\
+          "      - localhost\n"\
+          "    ip:\n"\
+          "      - 127.0.0.1\n"\
+          "  - name: es03\n"\
+          "    dns:\n"\
+          "      - es03\n"\
+          "      - localhost\n"\
+          "    ip:\n"\
+          "      - 127.0.0.1\n"\
+          > config/certs/instances.yml;
+          bin/elasticsearch-certutil cert --silent --pem -out config/certs/certs.zip --in config/certs/instances.yml --ca-cert config/certs/ca/ca.crt --ca-key config/certs/ca/ca.key;
+          unzip config/certs/certs.zip -d config/certs;
+        fi;
+        echo "Setting file permissions"
+        chown -R root:root config/certs;
+        find . -type d -exec chmod 750 \{\} \;;
+        find . -type f -exec chmod 640 \{\} \;;
+        echo "Waiting for Elasticsearch availability";
+        until curl -s --cacert config/certs/ca/ca.crt https://es01:9200 | grep -q "missing authentication credentials"; do sleep 30; done;
+        echo "All done!";
+      '
+    healthcheck:
+      test: ["CMD-SHELL", "[ -f config/certs/es01/es01.crt ]"]
+      interval: 1s
+      timeout: 5s
+      retries: 120
+
+  es01:
+    container_name: es01
+    depends_on:
+      es-setup:
+        condition: service_healthy
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.2.1
+    volumes:
+      - certs:/usr/share/elasticsearch/config/certs
+      - /es-data1:/usr/share/elasticsearch/data
+      - ./docker-entrypoint-es.sh:/mnt/docker-entrypoint-es.sh
+      - ./elasticsearch-analysis-ik-8.2.1.zip:/mnt/elasticsearch-analysis-ik-8.2.1.zip
+    entrypoint:
+      /mnt/docker-entrypoint-es.sh
+    ports:
+      - 9200:9200
+    environment:
+      - node.name=es01
+      - cluster.name=es_cluster
+      - cluster.initial_master_nodes=es01,es02,es03
+      - discovery.seed_hosts=es02,es03
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD:-xiangshou}
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.key=certs/es01/es01.key
+      - xpack.security.http.ssl.certificate=certs/es01/es01.crt
+      - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
+      - xpack.security.http.ssl.verification_mode=certificate
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.key=certs/es01/es01.key
+      - xpack.security.transport.ssl.certificate=certs/es01/es01.crt
+      - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
+      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.license.self_generated.type=basic
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 3gb
+    logging:
+      driver: local
+    restart: on-failure
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+
+  es02:
+    container_name: es02
+    depends_on:
+      - es01
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.2.1
+    volumes:
+      - certs:/usr/share/elasticsearch/config/certs
+      - /es-data2:/usr/share/elasticsearch/data
+      - ./docker-entrypoint-es.sh:/mnt/docker-entrypoint-es.sh
+      - ./elasticsearch-analysis-ik-8.2.1.zip:/mnt/elasticsearch-analysis-ik-8.2.1.zip
+    entrypoint:
+      /mnt/docker-entrypoint-es.sh
+    environment:
+      - node.name=es02
+      - cluster.name=es_cluster
+      - cluster.initial_master_nodes=es01,es02,es03
+      - discovery.seed_hosts=es01,es03
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.key=certs/es02/es02.key
+      - xpack.security.http.ssl.certificate=certs/es02/es02.crt
+      - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
+      - xpack.security.http.ssl.verification_mode=certificate
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.key=certs/es02/es02.key
+      - xpack.security.transport.ssl.certificate=certs/es02/es02.crt
+      - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
+      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.license.self_generated.type=basic
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 3gb
+    logging:
+      driver: local
+    restart: on-failure
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+
+  es03:
+    container_name: es03
+    depends_on:
+      - es02
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.2.1
+    volumes:
+      - certs:/usr/share/elasticsearch/config/certs
+      - /es-data3:/usr/share/elasticsearch/data
+      - ./docker-entrypoint-es.sh:/mnt/docker-entrypoint-es.sh
+      - ./elasticsearch-analysis-ik-8.2.1.zip:/mnt/elasticsearch-analysis-ik-8.2.1.zip
+    entrypoint:
+      /mnt/docker-entrypoint-es.sh
+    environment:
+      - node.name=es03
+      - cluster.name=es_cluster
+      - cluster.initial_master_nodes=es01,es02,es03
+      - discovery.seed_hosts=es01,es02
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.key=certs/es03/es03.key
+      - xpack.security.http.ssl.certificate=certs/es03/es03.crt
+      - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
+      - xpack.security.http.ssl.verification_mode=certificate
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.key=certs/es03/es03.key
+      - xpack.security.transport.ssl.certificate=certs/es03/es03.crt
+      - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
+      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.license.self_generated.type=basic
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 3gb
+    logging:
+      driver: local
+    restart: on-failure
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+
+  redis01:
+    container_name: redis01
+    image: redis:latest
+    restart: on-failure
+    command: redis-server --save 3600 1 --requirepass ${REDIS_PASSWORD:-xiangshou}
+    ports:
+      - 6379:6379
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2gb
+    logging:
+      driver: local
+    volumes:
+      - redis_cache:/data
+
+  api-server:
+    container_name: api-server
+    depends_on:
+      redis01:
+        condition: service_started
+      es01:
+        condition: service_healthy
+      es02:
+        condition: service_healthy
+      es03:
+        condition: service_healthy
+    build:
+      dockerfile: Dockerfile
+      context: ../../apps/api-server
+      args:
+        API_SERVER_DIR: /usr/src/api-server
+    volumes:
+      - ./elastic_ca.crt:/usr/src/api-server/elastic_ca.crt
+      - ./wxpay_apiclient_cert.pem:/usr/src/api-server/wxpay_apiclient_cert.pem
+      - ./wxpay_apiclient_key.pem:/usr/src/api-server/wxpay_apiclient_key.pem
+    environment:
+      - NODE_ENV=production
+      - API_SERVER_PORT=5000
+      - API_SERVER_URL=https://www.duckyuu.com
+      - API_SERVER_API_KEY=${API_SERVER_API_KEY:-xiangshou}
+      - API_SERVER_ROOT_USER_LOGIN_NUMBER=00000000000
+      - API_SERVER_ROOT_USER_LOGIN_PW=${API_SERVER_ROOT_USER_LOGIN_PW:-xiangshou}
+      - API_SERVER_LOG_LEVEL=debug
+      - WEBPAGE_DIR=./user-portal-build
+      - REDIS_URL=redis://redis01:6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-xiangshou}
+      - ELASTICSEARCH_ADDRESS=https://es01:9200
+      - ELASTICSEARCH_CA_CERT=./elastic_ca.crt
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD:-xiangshou}
+      - ALI_ACCESS_KEY_ID=${ALI_ACCESS_KEY_ID}
+      - ALI_SECRET_ACCESS_KEY=${ALI_SECRET_ACCESS_KEY}
+      - ALI_MARKET_APP_CODE=${ALI_MARKET_APP_CODE}
+      - ALI_SMS_SIGN_NAME=享授网络科技
+      - ALI_SMS_VERIFICATION_TEMPLATE=SMS_221060241
+      - ALI_SMS_REGISTERED_TUTOR_SIGN_NAME=南京享授网络科技有限公司
+      - ALI_SMS_REGISTERED_TUTOR_TEMPLATE=SMS_276360476
+      - ALI_SMS_COMMON_SIGN_NAME=享授科技
+      - ALI_SMS_AUDIT_TUTOR_ABNORMAL_TEMPLATE=SMS_276460833
+      - PROD_NAME=达趣
+      - ALI_OSS_REGION=oss-cn-shanghai
+      - ALI_OSS_BUCKET=bucket-iteachu-prod1
+      - ALI_VOD_BUCKET=bucket-iteachu-vod-prod1.oss-cn-shanghai.aliyuncs.com
+      - ALI_VOD_TEMPLATE_ID=98c9204e050615d1a236c413fef23bd1
+      - ALI_VOD_CALLBACK_KEY=${ALI_VOD_CALLBACK_KEY}
+      - TIM_SDK_APP_ID=${TIM_SDK_APP_ID}
+      - TIM_SDK_APP_SECRET=${TIM_SDK_APP_SECRET}
+      - WX_WEB_APP_ID=${WX_WEB_APP_ID}
+      - WX_WEB_APP_SECRET=${WX_WEB_APP_SECRET}
+      - WX_MP_APP_ID=${WX_MP_APP_ID}
+      - WX_MP_APP_SECRET=${WX_MP_APP_SECRET}
+      - WX_PAY_APPID=${WX_PAY_APPID}
+      - WX_PAY_MCHID=${WX_PAY_MCHID}
+      - WX_PAY_APIV3_SECRET=${WX_PAY_APIV3_SECRET}
+      - WX_PAY_API_CERT_FILE=./wxpay_apiclient_cert.pem
+      - WX_PAY_API_KEY_FILE=./wxpay_apiclient_key.pem
+      - AMAP_API_KEY=${AMAP_API_KEY}
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 3gb
+    logging:
+      driver: local
+      options:
+        max-size: "256m"
+        max-file: 32
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -X post -s http://api-server:5000/api/util/healthCheck",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+
+  central-clock:
+    container_name: central-clock
+    depends_on:
+      api-server:
+        condition: service_healthy
+    build:
+      dockerfile: Dockerfile
+      context: ../../apps/central-clock
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 0.5gb
+    logging:
+      driver: local
+    environment:
+      - NODE_ENV=production
+      - API_SERVER_HOSTNAME=api-server
+      - API_SERVER_PORT=5000
+      - API_SERVER_API_KEY=${API_SERVER_API_KEY:-xiangshou}
+
+  nginx:
+    image: daocloud.io/nginx:latest
+    container_name: reverse-proxy
+    depends_on:
+      api-server:
+        condition: service_healthy
+    restart: always
+    ports:
+      - 443:443
+      - 80:80
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1gb
+    logging:
+      driver: local
+    volumes:
+      - ./nginx-prod.conf:/etc/nginx/conf.d/nginx.conf
+      - ./9408515_www.duckyuu.com.pem:/etc/nginx/https-cert.pem
+      - ./9408515_www.duckyuu.com.key:/etc/nginx/https-cert.key
+
+volumes:
+  certs:
+    driver: local
+  redis_cache:
+    driver: local

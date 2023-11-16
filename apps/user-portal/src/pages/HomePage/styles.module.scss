@@ -1,0 +1,30 @@
+.content{
+  height: 50000px;
+  background-color: #fafafa;
+}
+
+.aaa{
+  padding: 100px 0;
+}
+
+.summaryContent{
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100%;
+  height: 100vh;
+  transform: translate(-50%, 0);
+
+  video,
+  img{
+    width: 100%;
+    height: 100%;
+    object-fit: over;
+  }
+}
+
+.screen{
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}

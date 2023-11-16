@@ -1,0 +1,11 @@
+node_modules/
+/build
+user-portal-build
+
+.eslintcache
+.DS_Store
+.idea
+.env
+*.log
+*.crt
+*.pem

@@ -1,0 +1,418 @@
+体育与竞技:
+  球类:
+    order: 1
+    branch:
+      - name: 篮球
+      - name: 足球
+      - name: 乒乓球
+      - name: 羽毛球
+      - name: 网球
+      - name: 排球
+      - name: 桌球
+      - name: 棒球
+      - name: 高尔夫
+      - name: 橄榄球
+    level: 青少年 成人 初级 高级
+  棋类:
+    order: 2
+    branch:
+      - name: 中国象棋
+      - name: 围棋
+      - name: 国际象棋
+      - name: 五子棋
+    level: 青少年 成人 初级 高级
+  武术拳击:
+    order: 3
+    branch:
+      - name: 武术
+      - name: 跆拳道
+      - name: 空手道
+      - name: 散打
+      - name: 自由搏击
+      - name: 太极
+      - name: 传统武术
+    level: 青少年 成人 初级 高级
+  田径与健身:
+    order: 4
+    branch:
+      - name: 瑜伽
+      - name: 健身
+      - name: 体适能
+      - name: 跑步
+      - name: 马拉松
+      - name: 田径
+      - name: 跳高
+      - name: 跳绳
+      - name: 跳远
+      - name: 塑形
+      - name: 减肥
+      - name: 增肌
+    level: 青少年 成人 初级 高级
+  游泳潜水:
+    order: 5
+    branch:
+      - name: 游泳
+      - name: 自由泳
+      - name: 蝶泳
+      - name: 仰泳
+      - name: 潜水
+      - name: 跳水
+      - name: 水上芭蕾
+    level: 青少年 成人 初级 高级
+  滑板轮滑:
+    order: 6
+    branch:
+      - name: 滑板
+      - name: 轮滑
+    level: 青少年 成人 初级 高级
+  车类与马术:
+    order: 7
+    branch:
+      - name: 平衡车
+      - name: 自行车
+      - name: 机动车驾驶
+      - name: 马术
+    level: 青少年 成人 初级 高级
+  射箭击剑:
+    order: 8
+    branch:
+      - name: 射箭
+      - name: 击剑
+    level: 青少年 成人 初级 高级
+  冰雪运动:
+    order: 9
+    branch:
+      - name: 滑雪
+      - name: 滑冰
+    level: 青少年 成人 初级 高级
+  户外:
+    order: 10
+    branch:
+      - name: 野外生存
+      - name: 钓鱼
+      - name: 露营
+  电子竞技:
+    order: 11
+    branch:
+      - name: MOBA
+      - name: FPS
+      - name: RTS
+
+艺术:
+  美术:
+    order: 1
+    branch:
+      - name: 绘画
+      - name: 素描
+      - name: 国画
+      - name: 油画
+      - name: 水彩
+      - name: 水粉
+      - name: 漫画
+      - name: 插画
+      - name: 彩铅
+      - name: 创意画
+    level: 青少年 成人 初级 高级 艺考
+  书法:
+    order: 2
+    branch:
+      - name: 硬笔
+      - name: 软笔
+    level: 青少年 成人 初级 高级 艺考
+  工艺:
+    order: 3
+    branch:
+      - name: 手工
+      - name: 雕塑
+      - name: 篆刻
+      - name: 珠宝
+      - name: 文物
+    level: 青少年 成人 初级 高级
+  设计:
+    order: 4
+    branch:
+      - name: 平面设计
+      - name: 工业设计
+      - name: 服装设计
+      - name: 室内设计
+      - name: UIUX设计
+      - name: 景观设计
+      - name: 建筑设计
+      - name: PS
+      - name: AI
+    level: 常识科普 初级 高级 考证
+  音乐:
+    order: 5
+    branch:
+      - name: 器乐
+      - name: 声乐
+      - name: 钢琴
+      - name: 吉他
+      - name: 架子鼓
+      - name: 古筝
+      - name: 尤克里里
+      - name: 小提琴
+      - name: 流行歌曲
+      - name: 美声
+    level: 青少年 成人 初级 高级 艺考
+  舞蹈:
+    order: 6
+    branch:
+      - name: 芭蕾舞
+      - name: 街舞
+      - name: 爵士舞
+      - name: 拉丁舞
+      - name: 中国舞
+      - name: 民族舞
+      - name: 基本功
+      - name: 编舞
+      - name: Popping
+      - name: Locking
+      - name: Breaking
+      - name: Hiphop
+      - name: 国标
+      - name: 现代舞
+      - name: 肚皮舞
+    level: 青少年 成人 初级 高级 艺考
+  电影与表演:
+    order: 7
+    branch:
+      - name: 表演
+      - name: 摄影
+      - name: 编导
+      - name: 戏曲
+      - name: 摄影后期
+      - name: 魔术
+    level: 青少年 成人 初级 高级 艺考
+
+科技与科学:
+  电子与机械:
+    order: 1
+    branch:
+      - name: 机器人
+      - name: 乐高与积木
+      - name: 魔方
+      - name: 数码产品
+      - name: 汽车维修
+      - name: 汽车产品
+      - name: 军事武器
+      - name: 电子电路
+      - name: 机械
+      - name: 机械臂
+      - name: 模拟电路
+      - name: 数字电路
+      - name: 信号系统
+      - name: 雷达
+      - name: 航天
+    level: 青少年 常识科普 考证 职业 科研
+  计算机与IT:
+    order: 2
+    branch:
+      - name: 编程开发
+      - name: 运维
+      - name: 办公软件
+      - name: 人工智能
+      - name: 数据科学
+      - name: 网络与通信
+      - name: CCNA
+      - name: 华为认证
+      - name: Java
+      - name: Python
+      - name: Javascript
+      - name: HTML
+      - name: C和C++
+      - name: Go
+      - name: 自然语言处理
+      - name: Android
+      - name: 算法
+    level: 青少年 常识科普 考证 职业 科研
+  健康与医学:
+    order: 3
+    branch:
+      - name: 内科
+      - name: 外科
+      - name: 心理与咨询
+      - name: 营养学
+      - name: 食品学
+      - name: 中医
+      - name: 执业药师
+      - name: 执业医师
+      - name: 执业护士
+      - name: 健康管理师
+      - name: 神经
+    level: 常识科普 考证 职业 科研
+  农林与生物:
+    order: 4
+    branch:
+      - name: 养殖
+      - name: 种植
+      - name: 水产
+      - name: 宠物
+      - name: 花艺
+      - name: 兽医
+      - name: 生物学
+      - name: 执业兽医
+      - name: 古生物
+      - name: 遗传学
+      - name: 微生物学
+      - name: 基因
+    level: 常识科普 初中 高中 成考自考 专升本 大学 考证 职业 科研
+  建造与交通:
+    order: 5
+    branch:
+      - name: 建筑
+      - name: 水利
+      - name: 交通
+      - name: 消防
+      - name: 工程造价
+      - name: 建造师
+      - name: 消防工程师
+      - name: 注册工程师
+      - name: 工程施工
+    level: 常识科普 考证 职业 科研
+  天文地理:
+    order: 6
+    branch:
+      - name: 天文
+      - name: 地理
+      - name: 地质
+      - name: 气象
+      - name: 环境
+      - name: 生态
+    level: 常识科普 初中 高中 成考自考 专升本 大学 考证 职业 科研
+  趣味数理化:
+    order: 7
+    branch:
+      - name: 数学
+        isK12: true
+      - name: 物理
+        isK12: true
+      - name: 化学
+        isK12: true
+      - name: 科学实验
+      - name: 量子
+      - name: 力学
+      - name: 光学
+      - name: 函数
+      - name: 几何
+      - name: 有机化学
+      - name: 材料学
+      - name: 化工
+      - name: 纺织
+    level: 常识科普 小学 初中 高中 成考自考 专升本 大学 考证 职业 科研
+
+人文与生活:
+  外语:
+    order: 1
+    branch:
+      - name: 英语
+      - name: 日语
+      - name: 韩语
+      - name: 法语
+      - name: 德语
+      - name: 俄语
+      - name: 西班牙语
+      - name: 意大利语
+      - name: 托福
+      - name: 雅思
+    level: 常识科普 初中 高中 成考自考 专升本 大学 考证 职业 科研
+  留学与移民:
+    order: 2
+    branch:
+      - name: 留学咨询
+      - name: 移民咨询
+      - name: SAT
+      - name: GRE
+      - name: AP
+      - name: IB
+  文学与国学:
+    order: 3
+    branch:
+      - name: 语文
+        isK12: true
+      - name: 文学
+      - name: 小说
+      - name: 散文
+      - name: 口才
+      - name: 主持
+      - name: 礼仪
+      - name: 国学
+      - name: 辩论
+      - name: 新闻学
+    level: 常识科普 小学 初中 高中 成考自考 专升本 艺考 大学 考证 职业 科研
+  教育与学习:
+    order: 4
+    branch:
+      - name: 学习方法
+      - name: 感统训练
+      - name: 益智
+      - name: 早教
+      - name: 教资考试
+  司法与法学:
+    order: 5
+    branch:
+      - name: 民法
+      - name: 刑法
+      - name: 法律执业资格
+      - name: 知识产权
+      - name: 考公考编
+    level: 常识科普 成考自考 专升本 大学 考证 职业 科研
+  历史与考古:
+    order: 6
+    branch:
+      - name: 历史
+      - name: 考古
+      - name: 中国历史
+      - name: 世界历史
+      - name: 文物
+    level: 常识科普 成考自考 专升本 大学 考证 职业 科研
+  烹饪与餐饮:
+    order: 8
+    branch:
+      - name: 厨艺
+      - name: 烘焙
+      - name: 茶艺
+      - name: 饮料制作
+      - name: 调酒品酒
+      - name: 咖啡制作
+    level: 常识科普 考证 职业
+  美妆:
+    order: 9
+    branch:
+      - name: 美容
+      - name: 美妆
+      - name: 美发
+      - name: 穿搭
+
+财经与商业:
+  电商与营销:
+    order: 1
+    branch:
+      - name: 市场
+      - name: 销售
+      - name: 互联网营销
+      - name: 互联网运营
+      - name: 电子商务
+    level: 常识科普 大学 考证 职业 科研
+  经济金融:
+    order: 2
+    branch:
+      - name: 经济
+      - name: 金融
+      - name: 会计职称
+      - name: 税务
+      - name: 注册会计
+      - name: 保险
+      - name: 理财
+      - name: 国际商务
+    level: 常识科普 成考自考 专升本 大学 考证 职业 科研
+  管理:
+    order: 3
+    branch:
+      - name: 人力资源
+      - name: 工商管理
+      - name: 供应链管理
+      - name: 酒店管理
+      - name: 行政管理
+      - name: 成功学
+    level: 常识科普 成考自考 专升本 大学 考证 职业 科研

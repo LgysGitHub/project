@@ -1,0 +1,12 @@
+[Unit]
+Description=itu api-server
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/root/iteachu/apps/api-server
+ExecStartPre=/usr/local/bin/npm install
+ExecStart=/usr/local/bin/npm start
+
+[Install]
+WantedBy=multi-user.target
